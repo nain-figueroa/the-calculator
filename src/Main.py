@@ -14,7 +14,6 @@ class Window(wx.Frame):
         #===OPCIONES=======================
         estandar_ID = self.NewControlId()
         cientific_ID = self.NewControlId()
-        main_menu_ID = self.NewControlId()
 
         #==CONVERSIONES====================
         volumen_ID = self.NewControlId()
@@ -39,7 +38,6 @@ class Window(wx.Frame):
         #MENU DE CALCULADORAS============================================================
         calculator_menu = wx.Menu()
 
-        main_menu = calculator_menu.Append(main_menu_ID, Variables.idioma.iloc[1,1])
         calculator_menu.AppendSeparator()
         estandar = calculator_menu.Append(estandar_ID, Variables.idioma.iloc[2,1])
         cientifica = calculator_menu.Append(cientific_ID, Variables.idioma.iloc[3,1])
@@ -73,14 +71,13 @@ class Window(wx.Frame):
         self.SetMenuBar(menu_bar)
 
         #PANEL INICIAL POR DEFAULT=======================================================
-        menu_inicio = wx.Panel(self)
-        identificador = wx.StaticText(menu_inicio, label='MENU INICIAL')
+        menu_inicio = Calculadora(self)
+        menu_inicio.estandar()
 
         #EVENTOS=========================================================================
         #===CAMBIO DE TIPO===============================================================
         self.Bind(wx.EVT_MENU, self.onCambioEstandar, estandar)
         self.Bind(wx.EVT_MENU, self.onCambioCientific, cientifica)
-        self.Bind(wx.EVT_MENU, self.onCambioMenu, main_menu)
 
         #===VENTANAS DE CONVERSION=======================================================
         self.Bind(wx.EVT_MENU, self.convVolumen, volumen)
@@ -120,17 +117,7 @@ class Window(wx.Frame):
         self.cal_cient = Calculadora(self)
         self.cal_cient.cientifica()
         self.actualizarPanel()
-    
-    #////////////////////////////////////////////////////////////////////////////////////
-    def onCambioMenu(self, evt):
-        for child in self.GetChildren():
-            if isinstance(child, wx.Panel):
-                child.Destroy()
-
-        menu_inicio = wx.Panel(self)
-        identificador = wx.StaticText(menu_inicio, label='MENU INICIAL')
-        self.actualizarPanel()
-    
+        
     #////////////////////////////////////////////////////////////////////////////////////
     def actualizarPanel(self):
         for child in self.GetChildren():
@@ -190,19 +177,27 @@ class Window(wx.Frame):
     #////////////////////////////////////////////////////////////////////////////////////
     def onEsp(self, evt):
         Variables.idioma = Variables.excel_idioma_esp
-        nuevaWin = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
+
+        nuevaWin = Window(None, title="The Calculator", size=(int(Variables.lenght_w), int(Variables.widht_w)), style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
         self.Destroy()
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def onEng(self, evt):
         Variables.idioma = Variables.excel_idioma_eng
         
-        nuevaWin = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
+        nuevaWin = Window(None, title="The Calculator", size=(int(Variables.lenght_w), int(Variables.widht_w)), style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
         self.Destroy()
 
 #////////////////////////////////////////////////////////////////////////////////////////
 if __name__ == "__main__":
     app = wx.App(False)
+    screen = wx.ScreenDC()
 
-    window = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
+    Variables.lenght_w , Variables.widht_w = screen.GetSize()
+    L = Variables.lenght_w / 6
+
+    Variables.lenght_w /= 4
+    Variables.widht_w -= L
+
+    window = Window(None, title="The Calculator", size=(int(Variables.lenght_w), int(Variables.widht_w)), style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
 
     app.MainLoop()

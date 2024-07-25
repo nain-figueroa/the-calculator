@@ -4,8 +4,6 @@ import pandas as pd
 lenght_w = 400
 widht_w = 600
 
-l_and_w = (lenght_w, widht_w)
-
 lenght_w_ext = lenght_w
 widht_w_ext = int(widht_w/3)
 

@@ -13,3 +13,4 @@ class Calculadora(wx.Panel):
     #////////////////////////////////////////////////////////////////////////////////////
     def cientifica(self):
         identificador = wx.StaticText(self, label='CIENTIFICA')
+    
