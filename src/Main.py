@@ -14,6 +14,7 @@ class Window(wx.Frame):
         #===OPCIONES=======================
         estandar_ID = self.NewControlId()
         cientific_ID = self.NewControlId()
+        main_menu_ID = self.NewControlId()
 
         #==CONVERSIONES====================
         volumen_ID = self.NewControlId()
@@ -24,9 +25,12 @@ class Window(wx.Frame):
         area_ID = self.NewControlId()
         velocidad_ID = self.NewControlId()
         tiempo_ID = self.NewControlId()
-        potencia_ID = self.NewControlId()
         presion_ID = self.NewControlId()
         angulo_ID = self.NewControlId()
+
+        #==IDIOMAS=========================
+        espanol_ID = self.NewControlId()
+        ingles_ID = self.NewControlId()
 
         self.CenterOnScreen()
 
@@ -34,30 +38,41 @@ class Window(wx.Frame):
         menu_bar = wx.MenuBar()
         #MENU DE CALCULADORAS============================================================
         calculator_menu = wx.Menu()
-        estandar = calculator_menu.Append(estandar_ID, 'Estándar\tCtrl+E')
-        cientifica = calculator_menu.Append(cientific_ID, 'Cientifica\tCtrl+I')
+
+        main_menu = calculator_menu.Append(main_menu_ID, Variables.idioma.iloc[1,1])
+        calculator_menu.AppendSeparator()
+        estandar = calculator_menu.Append(estandar_ID, Variables.idioma.iloc[2,1])
+        cientifica = calculator_menu.Append(cientific_ID, Variables.idioma.iloc[3,1])
 
         #MENU DE CONVERSIONES============================================================
         conversor_menu = wx.Menu()
-        volumen = conversor_menu.Append(volumen_ID, '&Volumen')
-        longitud = conversor_menu.Append(longitud_ID, '&Longitud')
-        peso_masa = conversor_menu.Append(peso_masa_ID, '&Peso y masa')
-        temperatura = conversor_menu.Append(temperatura_ID, '&Temperatura')
-        energia = conversor_menu.Append(energia_ID, '&Energia')
-        area = conversor_menu.Append(area_ID, '&Area')
-        velocidad = conversor_menu.Append(velocidad_ID, 'Velo&cidad')
-        tiempo = conversor_menu.Append(tiempo_ID, 'T&iempo')
-        potencia = conversor_menu.Append(potencia_ID, 'Pote&ncia')
-        presion = conversor_menu.Append(presion_ID, 'P&resion')
-        angulo = conversor_menu.Append(angulo_ID, 'Ang&ulo')
+        volumen = conversor_menu.Append(volumen_ID, Variables.idioma.iloc[5,1])
+        longitud = conversor_menu.Append(longitud_ID, Variables.idioma.iloc[6,1])
+        peso_masa = conversor_menu.Append(peso_masa_ID, Variables.idioma.iloc[7,1])
+        temperatura = conversor_menu.Append(temperatura_ID, Variables.idioma.iloc[8,1])
+        energia = conversor_menu.Append(energia_ID, Variables.idioma.iloc[9,1])
+        area = conversor_menu.Append(area_ID, Variables.idioma.iloc[10,1])
+        velocidad = conversor_menu.Append(velocidad_ID, Variables.idioma.iloc[11,1])
+        tiempo = conversor_menu.Append(tiempo_ID, Variables.idioma.iloc[12,1])
+        presion = conversor_menu.Append(presion_ID, Variables.idioma.iloc[13,1])
+        angulo = conversor_menu.Append(angulo_ID, Variables.idioma.iloc[14,1])
 
+        #MENU DE AJUSTES=================================================================
+        ajustes = wx.Menu()
+
+        espanol = ajustes.Append(espanol_ID, Variables.idioma.iloc[16,1])
+        ajustes.AppendSeparator()
+        ingles = ajustes.Append(ingles_ID, Variables.idioma.iloc[17,1])
         
-        menu_bar.Append(calculator_menu, '&Calculadora')
-        menu_bar.Append(conversor_menu, 'Con&version')
+        #AGREGAR ELEMENTOS===============================================================
+        menu_bar.Append(calculator_menu, title=Variables.idioma.iloc[0,1])
+        menu_bar.Append(conversor_menu, Variables.idioma.iloc[4,1])
+        menu_bar.Append(ajustes, Variables.idioma.iloc[15,1])
 
 
         self.SetMenuBar(menu_bar)
 
+        #PANEL INICIAL POR DEFAULT=======================================================
         menu_inicio = wx.Panel(self)
         identificador = wx.StaticText(menu_inicio, label='MENU INICIAL')
 
@@ -65,6 +80,7 @@ class Window(wx.Frame):
         #===CAMBIO DE TIPO===============================================================
         self.Bind(wx.EVT_MENU, self.onCambioEstandar, estandar)
         self.Bind(wx.EVT_MENU, self.onCambioCientific, cientifica)
+        self.Bind(wx.EVT_MENU, self.onCambioMenu, main_menu)
 
         #===VENTANAS DE CONVERSION=======================================================
         self.Bind(wx.EVT_MENU, self.convVolumen, volumen)
@@ -75,11 +91,13 @@ class Window(wx.Frame):
         self.Bind(wx.EVT_MENU, self.convArea, area)
         self.Bind(wx.EVT_MENU, self.convVelocidad, velocidad)
         self.Bind(wx.EVT_MENU, self.convTiempo, tiempo)
-        self.Bind(wx.EVT_MENU, self.convPotencia, potencia)
         self.Bind(wx.EVT_MENU, self.convPresion, presion)
         self.Bind(wx.EVT_MENU, self.convAngulo, angulo)
-
         
+        #CAMBIOS DE IDIOMA===============================================================
+        self.Bind(wx.EVT_MENU, self.onEsp, espanol)
+        self.Bind(wx.EVT_MENU, self.onEng, ingles)
+
 
         self.Show(True)
     
@@ -104,6 +122,16 @@ class Window(wx.Frame):
         self.actualizarPanel()
     
     #////////////////////////////////////////////////////////////////////////////////////
+    def onCambioMenu(self, evt):
+        for child in self.GetChildren():
+            if isinstance(child, wx.Panel):
+                child.Destroy()
+
+        menu_inicio = wx.Panel(self)
+        identificador = wx.StaticText(menu_inicio, label='MENU INICIAL')
+        self.actualizarPanel()
+    
+    #////////////////////////////////////////////////////////////////////////////////////
     def actualizarPanel(self):
         for child in self.GetChildren():
             if isinstance(child, wx.Panel):
@@ -111,64 +139,70 @@ class Window(wx.Frame):
 
     #////////////////////////////////////////////////////////////////////////////////////
     def convVolumen(self, evt):
-        ventanaVol = Conversiones(self, title='Volumen', size=(300,200))
+        ventanaVol = Conversiones(self, title=Variables.idioma.iloc[18,1])
         ventanaVol.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convLongitud(self, evt):
-        ventanaLong = Conversiones(self, title='Longitud', size=(300, 200))
+        ventanaLong = Conversiones(self,  title=Variables.idioma.iloc[19,1])
         ventanaLong.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convPeso_Masa(self, evt):
-        ventanaPesoyMasa = Conversiones(self, title='Peso Y masa', size=(300,200))
+        ventanaPesoyMasa = Conversiones(self, title=Variables.idioma.iloc[20,1])
         ventanaPesoyMasa.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convTemperatura(self, evt):
-        ventanaTemp = Conversiones(self, title='Temperatura', size=(300,200))
+        ventanaTemp = Conversiones(self, title=Variables.idioma.iloc[21,1])
         ventanaTemp.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convEnergia(self, evt):
-        ventanaEn = Conversiones(self, title='Energía', size=(300,200))
+        ventanaEn = Conversiones(self, title=Variables.idioma.iloc[22,1])
         ventanaEn.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convArea(self, evt):
-        ventanaAr = Conversiones(self, title='Area', size=(300,200))
+        ventanaAr = Conversiones(self, title=Variables.idioma.iloc[23,1])
         ventanaAr.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convVelocidad(self, evt):
-        ventanaVel = Conversiones(self, title='Velocidad', size=(300,200))
+        ventanaVel = Conversiones(self, title=Variables.idioma.iloc[24,1])
         ventanaVel.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convTiempo(self, evt):
-        ventanaTiempo = Conversiones(self, title='Tiempo', size=(300,200))
+        ventanaTiempo = Conversiones(self, title=Variables.idioma.iloc[25,1])
         ventanaTiempo.Show()
 
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    def convPotencia(self, evt):
-        ventanaPot = Conversiones(self, title='Potencia', size=(300,200))
-        ventanaPot.Show()
-
-    #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convPresion(self, evt):
-        ventanaPres = Conversiones(self, title='Presión', size=(300,200))
+        ventanaPres = Conversiones(self, title=Variables.idioma.iloc[26,1])
         ventanaPres.Show()
     
     #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     def convAngulo(self, evt):
-        ventanaAng = Conversiones(self, title='Angulo', size=(300,200))
+        ventanaAng = Conversiones(self, title=Variables.idioma.iloc[27,1])
         ventanaAng.Show()
 
+    #////////////////////////////////////////////////////////////////////////////////////
+    def onEsp(self, evt):
+        Variables.idioma = Variables.excel_idioma_esp
+        nuevaWin = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
+        self.Destroy()
+    #\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    def onEng(self, evt):
+        Variables.idioma = Variables.excel_idioma_eng
+        
+        nuevaWin = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
+        self.Destroy()
 
 #////////////////////////////////////////////////////////////////////////////////////////
 if __name__ == "__main__":
     app = wx.App(False)
 
-    window = Window(None, title="The Calculator", size=Variables.l_and_w)
+    window = Window(None, title="The Calculator", size=Variables.l_and_w, style=wx.CAPTION|wx.MINIMIZE_BOX|wx.CLOSE_BOX)
 
     app.MainLoop()

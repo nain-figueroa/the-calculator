@@ -9,6 +9,7 @@ class Conversiones(wx.Frame):
     
     #////////////////////////////////////////////////////////////////////////////////////
     def main(self):
+        self.SetSize(Variables.ventan_ext)
         self.CenterOnScreen()
 
 
