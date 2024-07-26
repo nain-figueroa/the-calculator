@@ -31,6 +31,9 @@ class Window(wx.Frame):
         espanol_ID = self.NewControlId()
         ingles_ID = self.NewControlId()
 
+        #==TOOL BAR========================
+        m_ID = self.NewControlId()
+
         self.CenterOnScreen()
 
     #BARRA DE MENU=======================================================================
@@ -38,8 +41,8 @@ class Window(wx.Frame):
         #MENU DE CALCULADORAS============================================================
         calculator_menu = wx.Menu()
 
-        calculator_menu.AppendSeparator()
         estandar = calculator_menu.Append(estandar_ID, Variables.idioma.iloc[2,1])
+        calculator_menu.AppendSeparator()
         cientifica = calculator_menu.Append(cientific_ID, Variables.idioma.iloc[3,1])
 
         #MENU DE CONVERSIONES============================================================
@@ -64,17 +67,25 @@ class Window(wx.Frame):
         
         #AGREGAR ELEMENTOS===============================================================
         menu_bar.Append(calculator_menu, title=Variables.idioma.iloc[0,1])
-        menu_bar.Append(conversor_menu, Variables.idioma.iloc[4,1])
-        menu_bar.Append(ajustes, Variables.idioma.iloc[15,1])
-
+        menu_bar.Append(conversor_menu, title=Variables.idioma.iloc[4,1])
+        menu_bar.Append(ajustes, title=Variables.idioma.iloc[15,1])
 
         self.SetMenuBar(menu_bar)
 
         #PANEL INICIAL POR DEFAULT=======================================================
         menu_inicio = Calculadora(self)
         menu_inicio.estandar()
+    
+    #TOOL BAR============================================================================
+        barra_herramientas = wx.ToolBar(self)
 
-        #EVENTOS=========================================================================
+        m = barra_herramientas.AddTool(m_ID, 'Memory', wx.ArtProvider.GetBitmap(wx.ART_FOLDER))
+
+        barra_herramientas.Realize()
+
+        self.SetToolBar(barra_herramientas)
+
+    #EVENTOS=============================================================================
         #===CAMBIO DE TIPO===============================================================
         self.Bind(wx.EVT_MENU, self.onCambioEstandar, estandar)
         self.Bind(wx.EVT_MENU, self.onCambioCientific, cientifica)
