@@ -16,6 +16,7 @@ class Calculadora(wx.Panel):
 
         tam_textResult = (int(Variables.lenght_w),int(Variables.widht_w/10))
         tam_botones = (int(Variables.lenght_w/4),int(Variables.widht_w/8 - 5))
+        size_border = int((tam_botones[0]) / 2)
         #tam_memory_b = (int(Variables.lenght_w/6), int(Variables.widht_w/16))
         b_relleno= wx.Button(self, label='',size=tam_botones)
 
@@ -29,7 +30,6 @@ class Calculadora(wx.Panel):
         #BOX SIZERS======================================================================
         sizer_general = wx.BoxSizer(wx.VERTICAL)
         sizer_calculos = wx.BoxSizer(wx.VERTICAL)
-        sizer_M = wx.BoxSizer(wx.HORIZONTAL)            #MC, MR, M+, M-, MS, M(flecha para abajo)
         sizer_botones = wx.BoxSizer(wx.VERTICAL)
         sub_sizer_bontones_1 = wx.BoxSizer(wx.HORIZONTAL) #CE, C, /, Del
         sub_sizer_bontones_2 = wx.BoxSizer(wx.HORIZONTAL) #7, 8, 9, *
@@ -88,13 +88,6 @@ class Calculadora(wx.Panel):
         b_CE.SetFont(fuente_botones)
         b_C.SetFont(fuente_botones)
 
-        #==M´S===========================================================================
-        b_mc = wx.Button(self, label='MC')
-        b_mr = wx.Button(self, label='MR')
-        b_mp = wx.Button(self, label='M+')
-        b_mn = wx.Button(self, label='M-')
-        b_ms = wx.Button(self, label='MS')
-
         #CUADRO DE TEXTO=================================================================
         self.text_valores = wx.TextCtrl(self, value='', size=tam_textResult, style=wx.BOTTOM|wx.ALIGN_RIGHT|wx.TE_RICH|wx.TE_DONTWRAP|wx.TE_NOHIDESEL)
         self.text_operaciones = wx.TextCtrl(self, value='', size=tam_textResult, style=wx.BOTTOM|wx.ALIGN_RIGHT|wx.TE_RICH|wx.TE_DONTWRAP|wx.TE_NOHIDESEL)
@@ -135,29 +128,21 @@ class Calculadora(wx.Panel):
         sub_sizer_bontones_1.Add(b_div)
         sub_sizer_bontones_1.Add(b_del)
 
-        #Fila M´s========================================================================
-        sizer_M.Add(b_mc)
-        sizer_M.Add(b_mr)
-        sizer_M.Add(b_mp)
-        sizer_M.Add(b_mn)
-        sizer_M.Add(b_ms)
-
         #Texto de resultados=============================================================
         sizer_calculos.Add(self.text_valores)
         sizer_calculos.Add(self.text_operaciones)
 
         #UNION DE TODOS LOS SIZERS=======================================================
         #===BOTONES======================================================================
-        sizer_botones.Add(sub_sizer_bontones_1)
-        sizer_botones.Add(sub_sizer_bontones_2)
-        sizer_botones.Add(sub_sizer_bontones_3)
-        sizer_botones.Add(sub_sizer_bontones_4)
-        sizer_botones.Add(sub_sizer_bontones_5)
+        sizer_botones.Add(sub_sizer_bontones_1, flag=wx.LEFT|wx.RIGHT, border=int(size_border/5))
+        sizer_botones.Add(sub_sizer_bontones_2, flag=wx.LEFT|wx.RIGHT, border=int(size_border/5))
+        sizer_botones.Add(sub_sizer_bontones_3, flag=wx.LEFT|wx.RIGHT, border=int(size_border/5))
+        sizer_botones.Add(sub_sizer_bontones_4, flag=wx.LEFT|wx.RIGHT, border=int(size_border/5))
+        sizer_botones.Add(sub_sizer_bontones_5, flag=wx.LEFT|wx.RIGHT, border=int(size_border/5))
 
         #===GENERAL======================================================================
         sizer_general.Add(sizer_calculos, flag=wx.LEFT|wx.RIGHT|wx.TOP, border=3)
-        sizer_general.Add(sizer_M, flag=wx.LEFT|wx.RIGHT, border=3)
-        sizer_general.Add(sizer_botones, flag=wx.LEFT|wx.RIGHT|wx.BOTTOM, border=10)
+        sizer_general.Add(sizer_botones, flag=wx.TOP, border=size_border)
 
         self.SetSizer(sizer_general)
 

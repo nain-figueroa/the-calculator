@@ -51,16 +51,6 @@ class Window(wx.Frame):
         #PANEL CALCULADORA===============================================================
         menu_inicio = Calculadora(self)
         menu_inicio.estandar()
-    
-    #TOOL BAR============================================================================
-        barra_herramientas = wx.ToolBar(self)
-
-        m = barra_herramientas.AddTool(m_ID, 'Memory', wx.ArtProvider.GetBitmap(wx.ART_FOLDER))
-
-        barra_herramientas.Realize()
-
-        self.SetToolBar(barra_herramientas)
-
     #EVENTOS=============================================================================
         #===VENTANAS DE CONVERSION=======================================================
         self.Bind(wx.EVT_MENU, self.convVolumen, volumen)
