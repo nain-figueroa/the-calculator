@@ -1,2 +1,2 @@
 # The Calculator
-##Una simple calculadora hecha con wxPython
+Una simple calculadora hecha con wxPython
